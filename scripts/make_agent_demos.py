@@ -106,16 +106,17 @@ def generate_demos(n_episodes, valid, seed, shift=0):
                     action = action.item()
                 new_obs, reward, done, _ = env.step(action)
                 agent.analyze_feedback(reward, done)
-
                 actions.append(action)
                 images.append(obs['image'])
                 directions.append(obs['direction'])
 
                 obs = new_obs
             if reward > 0 and (args.filter_steps == 0 or len(images) <= args.filter_steps):
+                #images.append(new_obs['image'])
+                #actions.append(np.array([6]))
+                #directions.append(obs['direction'])
                 demos.append((mission, blosc.pack_array(np.array(images)), directions, actions))
                 just_crashed = False
-
             if reward == 0:
                 if args.on_exception == 'crash':
                     raise Exception("mission failed, the seed is {}".format(seed + len(demos)))
